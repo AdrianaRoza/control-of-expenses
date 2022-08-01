@@ -2,9 +2,9 @@ const transactionsUl = document.querySelector('#transactions')
 const incomeDisplay = document.querySelector('#money-plus')
 const expenseDisplay = document.querySelector('#money-minus')
 const balanceDisplay = document.querySelector('#balance')
-
-
-
+const form = document.querySelector('#form')
+const inputTransactionName = document.querySelector('#text')
+const inputTransactionAmount = document.querySelector('#amount')
 
 const dummyTransactions = [
   {id:1, name: 'Bolo de chocolate', amount: -20},
@@ -21,7 +21,9 @@ const addTransactionIntoDOM = transaction => {
 
   li.classList.add(CSSClass)
   li.innerHTML = `
-    ${transaction.name} <span>${operator} R$ ${amountWithoutOperator}</span><button class="delete-btn">x</button>
+    ${transaction.name} 
+    <span>${operator} R$ ${amountWithoutOperator}</span>
+    <button class="delete-btn">x</button>
   `
   transactionsUl.append(li)
      
@@ -48,8 +50,35 @@ const updateBalanceValues = () => {
 }
 
 const init = () => {
+  transactionsUl.innerHTML = ''
   dummyTransactions.forEach(addTransactionIntoDOM)
   updateBalanceValues()
 }
 
 init()
+
+const generateID = () => Math.round(Math.random() * 1000)
+
+form.addEventListener('submit', event =>{
+  event.preventDefault()
+
+  const transactionName = inputTransactionName.value.trim()
+  const transactionAmount = inputTransactionAmount.value.trim()
+
+
+  if (transactionName === '' || transactionAmount === '') {
+    alert('Por favor, preencha tanto o nome quanto o valor da transação')
+    return
+  }
+  const transaction = { 
+    id: generateID(), 
+    name: transactionName, 
+    amount: Number(transactionAmount) 
+  }
+
+  dummyTransactions.push(transaction)
+  init()
+
+  inputTransactionName.value = ''
+  inputTransactionAmount.value = ''
+})
